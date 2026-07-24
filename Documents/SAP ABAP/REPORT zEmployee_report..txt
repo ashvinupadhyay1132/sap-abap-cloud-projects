@@ -1,0 +1,74 @@
+REPORT zEmployee_report.
+
+PARAMETERS P_SALARY TYPE I.
+
+
+
+if P_SALARY >= 80000.
+
+WRITE / 'EXCELLENT'.
+
+ELSEIF P_SALARY >= 50000.
+
+WRITE / 'GOOD'.
+
+ELSE.
+
+WRITE /'NEEDS IMPROVEMENT'.
+
+ENDIF.
+
+REPORT zEmployee_Age.
+
+
+
+PARAMETERS P_Age TYPE I.
+
+
+
+
+
+
+
+if P_Age < 18.
+
+
+
+WRITE / 'Not Eligible'.
+
+
+
+ELSEIF P_Age <=60.
+
+
+
+WRITE / 'Eligible'.
+
+
+
+ELSE.
+
+
+
+WRITE /'Senior Citizen'.
+
+
+
+ENDIF.
+
+
+
+REPORT zEmployee_Report.
+
+
+PARAMETERS P_Age TYPE I.
+PARAMETERS P_Salary TYPE I.
+
+if P_Age >= 18 AND P_Age <=60 AND P_Salary > 50000.
+
+WRITE / 'Qualified'.
+
+ENDIF.
+
+
+if P_Age >= 18 AND P_Age <=60 AND (P_Salary > 50000 OR P_DESIGNATION = 'MANAGER').
