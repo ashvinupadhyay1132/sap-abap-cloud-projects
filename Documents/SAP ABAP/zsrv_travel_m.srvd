@@ -1,0 +1,9 @@
+@EndUserText.label: 'Travel Management OData V4 Service Exposure'
+define service ZSRV_TRAVEL_M {
+  expose ZCDS_I_TRAVEL_M as TravelHeader;
+  expose ZCDS_I_BOOKING_M as FlightBooking;
+  expose /DMO/I_Customer as CustomerMaster;
+  expose /DMO/I_Agency as AgencyMaster;
+  expose /DMO/I_Carrier as CarrierMaster;
+  expose I_Currency as CurrencyMaster;
+}

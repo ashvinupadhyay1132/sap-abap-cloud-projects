@@ -1,0 +1,30 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Booking Child View Entity - RAP Model'
+
+define view entity ZCDS_I_BOOKING_M
+  as select from /dmo/booking as Booking
+
+  /* Association back to Parent Root Entity */
+  association to parent ZCDS_I_TRAVEL_M as _Travel on $projection.Travel_ID = _Travel.Travel_ID
+
+  association [1..1] to /DMO/I_Customer as _Customer on $projection.Customer_ID = _Customer.CustomerID
+  association [1..1] to /DMO/I_Carrier  as _Carrier  on $projection.Carrier_ID  = _Carrier.AirlineID
+{
+  key travel_id     as Travel_ID,
+  key booking_id    as Booking_ID,
+
+      booking_date  as Booking_Date,
+      customer_id   as Customer_ID,
+      carrier_id    as Carrier_ID,
+      connection_id as Connection_ID,
+      flight_date   as Flight_Date,
+
+      @Semantics.amount.currencyCode: 'Currency_Code'
+      flight_price  as Flight_Price,
+      currency_code as Currency_Code,
+
+      /* Associations */
+      _Travel,
+      _Customer,
+      _Carrier
+}
