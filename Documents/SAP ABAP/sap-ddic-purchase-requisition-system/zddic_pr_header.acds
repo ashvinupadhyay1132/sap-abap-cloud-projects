@@ -1,0 +1,46 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Purchase Requisition Header - DDIC Dictionary View'
+@Search.searchable: true
+
+define root view entity ZDDIC_PR_HEADER
+  as select from /dmo/travel as PRHeader
+
+  /* Association to Line Items */
+  composition [0..*] of ZDDIC_PR_ITEM as _Items
+
+  association [0..1] to /DMO/I_Customer as _Requester on $projection.Created_By = _Requester.CustomerID
+  association [0..1] to I_Currency       as _Currency  on $projection.Currency   = _Currency.Currency
+
+{
+  key travel_id       as PR_Number,
+      
+      @Search.defaultSearchElement: true
+      agency_id       as Plant,
+      
+      @Search.defaultSearchElement: true
+      customer_id     as Created_By,
+      
+      begin_date      as Requisition_Date,
+      end_date        as Delivery_Date,
+      
+      description     as PR_Description,
+
+      /* Domain Fixed Value: 'NB' (Standard PR), 'FO' (Framework PR), 'RV' (Outline Agreement) */
+      currency_code   as PR_Type,
+
+      /* Domain Fixed Value: 'D' (Draft), 'S' (Submitted), 'A' (Approved), 'R' (Rejected) */
+      overall_status  as PR_Status,
+      
+      @Semantics.amount.currencyCode: 'Currency'
+      booking_fee     as Header_Fee,
+      
+      @Semantics.amount.currencyCode: 'Currency'
+      total_price     as Total_PR_Amount,
+      
+      currency_code   as Currency,
+
+      /* Associations */
+      _Items,
+      _Requester,
+      _Currency
+}

@@ -1,0 +1,36 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Purchase Requisition Item - DDIC Dictionary View'
+
+define view entity ZDDIC_PR_ITEM
+  as select from /dmo/booking as PRItem
+
+  /* Parent Association */
+  association to parent ZDDIC_PR_HEADER as _Header on $projection.PR_Number = _Header.PR_Number
+
+  association [1..1] to /DMO/I_Customer as _Vendor   on $projection.Vendor_ID = _Vendor.CustomerID
+  association [1..1] to /DMO/I_Carrier  as _Material on $projection.Material_Group = _Material.AirlineID
+{
+  key travel_id     as PR_Number,
+  key booking_id    as PR_Item_No,
+
+      booking_date  as Item_Created_Date,
+      customer_id   as Vendor_ID,
+      carrier_id    as Material_Group,
+      connection_id as Material_No,
+      flight_date   as Required_Date,
+
+      /* Semantics for Quantity and Unit of Measure */
+      @Semantics.quantity.unitOfMeasure: 'Unit_Of_Measure'
+      booking_id    as Quantity,
+      currency_code as Unit_Of_Measure,
+
+      /* Semantics for Amount and Currency Code */
+      @Semantics.amount.currencyCode: 'Currency'
+      flight_price  as Price_Per_Unit,
+      currency_code as Currency,
+
+      /* Exposed Associations */
+      _Header,
+      _Vendor,
+      _Material
+}
