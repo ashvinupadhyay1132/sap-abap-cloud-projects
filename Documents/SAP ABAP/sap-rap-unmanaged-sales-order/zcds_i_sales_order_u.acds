@@ -1,0 +1,30 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Unmanaged Sales Order Header View Entity'
+
+define root view entity ZCDS_I_SALES_ORDER_U
+  as select from /dmo/travel as SalesOrder
+
+  composition [0..*] of ZCDS_I_SALES_ITEM_U as _Items
+
+  association [0..1] to /DMO/I_Customer as _Customer on $projection.Customer_ID = _Customer.CustomerID
+  association [0..1] to /DMO/I_Agency   as _SalesOrg on $projection.Sales_Org   = _SalesOrg.AgencyID
+  association [0..1] to I_Currency       as _Currency on $projection.Currency    = _Currency.Currency
+{
+  key travel_id       as Sales_Order_ID,
+      agency_id       as Sales_Org,
+      customer_id     as Customer_ID,
+      begin_date      as Order_Date,
+      end_date        as Requested_Delivery_Date,
+      description     as Order_Description,
+      overall_status  as Order_Status,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      total_price     as Total_Order_Amount,
+      currency_code   as Currency,
+
+      /* Associations */
+      _Items,
+      _Customer,
+      _SalesOrg,
+      _Currency
+}

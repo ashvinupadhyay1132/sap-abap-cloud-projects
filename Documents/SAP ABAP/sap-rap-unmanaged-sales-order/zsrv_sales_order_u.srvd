@@ -1,0 +1,5 @@
+@EndUserText.label: 'Unmanaged Sales Order OData V4 Service Exposure'
+define service ZSRV_SALES_ORDER_U {
+  expose ZCDS_I_SALES_ORDER_U as SalesOrderHeader;
+  expose ZCDS_I_SALES_ITEM_U  as SalesOrderItem;
+}

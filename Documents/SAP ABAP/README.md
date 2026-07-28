@@ -17,6 +17,7 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
+| [`sap-rap-unmanaged-sales-order`](./sap-rap-unmanaged-sales-order) | Unmanaged BO & Legacy BAPI | Unmanaged RAP, Custom Transactional Buffer, Saver Sequence, ABAP Unit Tests |
 | [`sap-amdp-financial-analytics`](./sap-amdp-financial-analytics) | Database Code Pushdown | AMDP, HANA SQLScript, Window Functions (`RANK`), ABAP Unit Tests |
 | [`sap-ddic-purchase-requisition-system`](./sap-ddic-purchase-requisition-system) | Data Dictionary & Procurement | CDS View Entities, Currency/Quantity Semantics, Deep Structures, Table Types, ABAP Unit Tests |
 | [`sap-rap-managed-travel-app`](./sap-rap-managed-travel-app) | Business Object Architecture | SAP RAP Framework, Draft Handling, BDEF, EML, Validations, ABAP Unit Tests |
