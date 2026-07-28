@@ -1,52 +1,29 @@
-# 📊 SAP ABAP Cloud Open SQL Foundation (`sap-abap-open-sql-foundation`)
+# ABAP Cloud Open SQL Foundation
 
-Production-style Open SQL demonstration report built for **SAP BTP ABAP Cloud Environment**.
-
----
-
-## 📌 Business Requirement (Functional Spec)
-- **Domain:** Data Analysis & Master Data Audit
-- **Problem Statement:** A business analyst needs a consolidated Material / Travel analysis report. The report must validate inputs (`Agency ID` / `Plant` and `Currency` / `Material Type`), count matching entries without loading unnecessary memory, fetch detailed rows via INNER JOIN & LEFT OUTER JOIN (displaying Customer/Master names), group records using Aggregate functions (`COUNT`, `AVG`, `MAX`, `MIN`), filter aggregated groups with `HAVING`, and display a unique list of currencies using `SELECT DISTINCT`.
+Demonstrates Open SQL query patterns in ABAP Cloud using released SAP BTP entities (`/dmo/travel`, `/dmo/booking`, `/dmo/customer`, `/dmo/agency`).
 
 ---
 
-## 📥 Inputs & 📤 Outputs
+## Open SQL Patterns Covered
 
-### Inputs:
-- `p_agency_id` (Simulated Plant/Agency parameter, e.g. `'070001'`)
-- `p_currency` (Simulated Material Type/Currency parameter, e.g. `'EUR'`)
-
-### Outputs:
-- **Validation Message:** Result of `SELECT SINGLE` checking if Agency exists.
-- **Record Count:** Integer count returned from `COUNT(*)`.
-- **Detail Report:** Joined table display (Travel ID, Customer ID, Customer Name, Price, Currency).
-- **Summary Report:** Aggregated table display (`Agency_ID`, `Travel_Count`, `Avg_Price`, `Max_Price`, `Min_Price`).
-- **Unique List:** Distinct list of currencies (`EUR`, `JPY`, `USD`, etc.).
+- **`SELECT SINGLE`:** Fetching a single record to validate agency existence.
+- **`COUNT(*)`:** Counting rows directly at database level.
+- **`INNER JOIN` & `LEFT OUTER JOIN`:** Joining relational tables while handling optional text descriptions.
+- **`GROUP BY` & `HAVING`:** Grouping data and applying aggregate conditions.
+- **Aggregate Functions:** `SUM`, `AVG`, `MAX`, `MIN`.
+- **`SELECT DISTINCT`:** Fetching deduplicated currency lists.
 
 ---
 
-## 🗄️ Database Tables & Open SQL Feature Matrix
+## File Structure
 
-| Open SQL Feature | Database Tables Joined | Purpose |
-| :--- | :--- | :--- |
-| `SELECT SINGLE` | `/dmo/agency` | Validate agency existence in single DB fetch. |
-| `COUNT(*)` | `/dmo/travel` INNER JOIN `/dmo/booking` | Fast database-side record counting. |
-| `INNER JOIN` | `/dmo/travel` & `/dmo/booking` | Enforce header-item relational integrity. |
-| `LEFT OUTER JOIN` | `/dmo/customer` | Optional description fetch (preserves row if customer name missing). |
-| `GROUP BY & HAVING` | `/dmo/travel` | Group metrics by agency, filter groups where count > 0. |
-| `SELECT DISTINCT` | `/dmo/travel` | Deduplicate and extract unique currency codes. |
+- `zcl_open_sql.abap`: Class implementing `if_oo_adt_classrun` with all Open SQL queries and output formatting.
 
 ---
 
-## 📄 Component Manifest
+## Execution Output
 
-| Object Name | Object Type | Business Purpose |
-| :--- | :--- | :--- |
-| [`zcl_open_sql.abap`](./zcl_open_sql.abap) | ABAP Cloud Class | Executable report implementing `if_oo_adt_classrun` with full Open SQL demonstration. |
-
----
-
-## 🖥️ Execution Output Log (SAP BTP Cloud Trial)
+Running `zcl_open_sql` in Eclipse ADT (`F8`) produces the following output:
 
 ```text
 ========================================================================================

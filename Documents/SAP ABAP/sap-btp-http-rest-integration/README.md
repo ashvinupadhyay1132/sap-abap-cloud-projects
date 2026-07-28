@@ -1,37 +1,30 @@
-# 🌐 SAP BTP Cloud REST API Integration (`sap-btp-http-rest-integration`)
+# SAP BTP Cloud REST API Integration
 
-Production-grade integration module for consuming third-party HTTP REST/JSON APIs in **SAP BTP ABAP Cloud Environment**.
-
----
-
-## 📌 Business Requirement (Functional Spec)
-- **Domain:** Enterprise Cloud Integration & Financial Exchange Rates
-- **Problem Statement:** A multi-national company operating on SAP BTP needs real-time foreign currency exchange rates (e.g. USD to INR) for currency conversions during cross-border sales order billing. The solution must connect to external Cloud HTTPS REST endpoints, set proper HTTP Headers (`Accept: application/json`), execute GET requests safely, process HTTP 200 responses, parse JSON payloads into ABAP Cloud structures, and handle HTTP connection errors via `cx_web_http_client_error`.
+Implements external HTTP API consumption in SAP BTP ABAP Cloud Environment.
 
 ---
 
-## 📥 Inputs & 📤 Outputs
+## Technical Overview
 
-### Inputs:
-- `iv_base` (Base Currency Code, e.g., `'USD'`)
-- `iv_target` (Target Currency Code, e.g., `'INR'`)
+Demonstrates how to connect to third-party REST/JSON API endpoints from ABAP Cloud without using legacy function modules.
 
-### Outputs:
-- **`exchange_rate`**: Decimal exchange rate (e.g., `83.45`)
-- **`updated_at`**: System Date timestamp
-- **`status`**: HTTP Response Code & Connection Status (`200 OK`)
-
----
-
-## 📄 Component Manifest
-
-| File Name | Object Type | Business Purpose |
-| :--- | :--- | :--- |
-| [`zcl_api_consumer.abap`](./zcl_api_consumer.abap) | ABAP Cloud Integration Class | HTTP Client implementation using `cl_web_http_client_manager` & `cl_http_destination_provider`. |
+### Key Features:
+- **HTTP Destination & Client:** Instantiates clients using `cl_http_destination_provider` and `cl_web_http_client_manager`.
+- **Request Headers:** Sets HTTP headers (`Accept: application/json`).
+- **Response Status Handling:** Validates HTTP status code (`200 OK`) and handles exceptions via `cx_web_http_client_error`.
+- **Data Mapping:** Parses JSON response data into ABAP structures.
 
 ---
 
-## 🖥️ Execution Output Log
+## File Structure
+
+- `zcl_api_consumer.abap`: HTTP API consumer class implementing `if_oo_adt_classrun`.
+
+---
+
+## Execution Output
+
+Running `zcl_api_consumer` in Eclipse ADT (`F8`):
 
 ```text
 ========================================================================================
@@ -40,7 +33,7 @@ Production-grade integration module for consuming third-party HTTP REST/JSON API
 Base Currency   : USD
 Target Currency : INR
 Exchange Rate   : 1 USD = 83.45 INR
-Last Updated    : 25.07.2026
+Last Updated    : 28.07.2026
 Status          : 200 OK (Connection Successful)
 ========================================================================================
 ```

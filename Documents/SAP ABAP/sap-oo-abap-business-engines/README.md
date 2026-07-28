@@ -1,45 +1,33 @@
-# ⚙️ Object-Oriented ABAP Business Engines (`sap-oo-abap-business-engines`)
+# OO-ABAP Business Engines
 
-Production-style Object-Oriented ABAP programs showcasing 7.5+ Modern ABAP syntax, Type Inference, Encapsulation, and Business Rule Validation.
-
----
-
-## 📌 Business Requirement (Functional Spec)
-
-### 1. Enterprise Sales Order Discount Engine (`zcl_order_processor.abap`):
-- **Domain:** Sales & Distribution (SD) / E-Commerce
-- **Problem Statement:** Validate incoming sales orders. Reject orders with amount <= 0. Enforce Minimum Order Quantity (MOQ = ₹30,000) for Regular customers. Calculate tiered discounts for VIP (20%/15%), Regular (10%), and New (2%) customers, and compute net revenue.
-
-### 2. HR Bonus Calculation Engine (`zcl_hr_bonus_calc.abap`):
-- **Domain:** Human Resources (HR)
-- **Problem Statement:** Calculate year-end employee bonuses dynamically. Employees with Rating 'A' & >= 5 years experience receive 30% bonus, Rating 'A' & < 5 years receive 20%, Rating 'B' receives 10%, and Rating 'C' receives 0%.
+Contains modular Object-Oriented ABAP business engines showcasing ABAP 7.5+ language syntax, type inference, conditional expressions, and reference table iterations.
 
 ---
 
-## 📥 Inputs & 📤 Outputs
+## Included Engines
 
-### Inputs:
-- **Sales Order:** `order_id`, `customer_name`, `customer_type` (VIP/REGULAR/NEW), `gross_amount`
-- **Employee:** `emp_id`, `emp_name`, `emp_rating` (A/B/C), `emp_basesalary`, `emp_experience`
+### 1. Sales Order Discount Processor (`zcl_order_processor.abap`)
+- Validates minimum order values (MOQ = ₹30,000 for regular customers).
+- Computes customer tiered discounts (`VIP` = 20%/15%, `REGULAR` = 10%, `NEW` = 2%).
+- Uses constructor expressions (`VALUE #(...)`, `COND #(...)`) and reference loop pointers (`LOOP AT ... REFERENCE INTO`).
 
-### Outputs:
-- **Sales Order:** Net Amount, Discount %, Order Status (`PROCESSED & APPROVED` vs `REJECTED`), Total Approved Revenue.
-- **Employee:** Bonus %, Final Bonus Amount in INR, Summary List.
-
----
-
-## 📄 Component Manifest
-
-| File Name | Domain | Description |
-| :--- | :--- | :--- |
-| [`zcl_order_processor.abap`](./zcl_order_processor.abap) | Sales & Distribution (SD) | Sales Order Discount Engine using Type Inference (`DATA`, `VALUE`, `COND`, `CONV`). |
-| [`zcl_hr_bonus_calc.abap`](./zcl_hr_bonus_calc.abap) | Human Resources (HR) | Year-End Bonus Calculation Engine with nested rules & object loops. |
+### 2. HR Bonus Calculation Engine (`zcl_hr_bonus_calc.abap`)
+- Calculates year-end employee bonuses based on rating (`A`, `B`, `C`) and years of experience.
+- Demonstrates changing parameters (`CHANGING cs_emp TYPE ty_employee`).
 
 ---
 
-## 🖥️ Execution Output Logs
+## File Structure
 
-### HR Bonus Engine Output:
+- `zcl_order_processor.abap`: Sales Order processor class.
+- `zcl_hr_bonus_calc.abap`: HR Bonus calculator class.
+
+---
+
+## Execution Output
+
+Running `zcl_hr_bonus_calc` in Eclipse ADT (`F8`):
+
 ```text
 ========================================================================================
                        HR BONUS CALCULATION ENGINE                           
