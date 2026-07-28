@@ -1,3 +1,8 @@
+" ============================================================================
+" CLASS: zcl_amdp_runner
+" PURPOSE: Executable Test Runner for SAP AMDP Financial Analytics Class
+" EXECUTION: Press F8 in Eclipse ADT to view output in ABAP Console
+" ============================================================================
 CLASS zcl_amdp_runner DEFINITION
   PUBLIC
   FINAL
@@ -17,9 +22,10 @@ CLASS zcl_amdp_runner IMPLEMENTATION.
     out->write( '       SAP FI-CO MODULE - AMDP FINANCIAL ANALYTICS ENGINE (HANA SQLSCRIPT PUSHDOWN)     ' ).
     out->write( '========================================================================================' ).
 
-    " -------------------------------------------------------------------
-    " 1. PREPARING FINANCIAL POSTINGS DATA (INPUT TABLE)
-    " -------------------------------------------------------------------
+    " -------------------------------------------------------------------------
+    " STEP 1: Instantiate sample transactional financial postings
+    " Contains postings across multiple Company Codes (1000 & 2000) and Divisions
+    " -------------------------------------------------------------------------
     DATA(lt_postings) = VALUE zcl_amdp_financial_analytics=>tt_financial_postings(
       ( company_code = '1000' division = 'CLOUD_SERVICES' fiscal_year = '2026' posting_date = '20260115' revenue = 350000 cogs = 120000 opex = 45000 currency = 'INR' )
       ( company_code = '1000' division = 'CLOUD_SERVICES' fiscal_year = '2026' posting_date = '20260220' revenue = 400000 cogs = 150000 opex = 50000 currency = 'INR' )
@@ -31,15 +37,17 @@ CLASS zcl_amdp_runner IMPLEMENTATION.
     out->write( '[INPUT]: Instantiated 5 Financial Postings across Company Codes 1000 & 2000.' ).
     out->write( '----------------------------------------------------------------------------------------' ).
 
-    " -------------------------------------------------------------------
-    " 2. INSTANTIATING AMDP CLASS & EXECUTING PUSHDOWN PROCEDURE
-    " -------------------------------------------------------------------
+    " -------------------------------------------------------------------------
+    " STEP 2: Instantiate AMDP Class & Trigger HANA SQLScript Database Procedure
+    " Execution passes data into HANA Kernel and retrieves aggregated analytics
+    " -------------------------------------------------------------------------
     DATA(lo_amdp) = NEW zcl_amdp_financial_analytics( ).
     DATA lt_analytics TYPE zcl_amdp_financial_analytics=>tt_financial_analytics.
 
     TRY.
         out->write( '[EML EXECUTION]: Invoking AMDP Method (HANA DB Engine SQLScript Pushdown)...' ).
 
+        " Call the AMDP method
         lo_amdp->get_financial_revenue_analytics(
           EXPORTING
             it_postings  = lt_postings
@@ -52,9 +60,9 @@ CLASS zcl_amdp_runner IMPLEMENTATION.
         out->write( '                       FINANCIAL PROFITABILITY & RANKING REPORT                         ' ).
         out->write( '----------------------------------------------------------------------------------------' ).
 
-        " -------------------------------------------------------------------
-        " 3. DISPLAYING AUDITED FINANCIAL ANALYTICS REPORT
-        " -------------------------------------------------------------------
+        " ---------------------------------------------------------------------
+        " STEP 3: Iterate through computed analytics table and render output
+        " ---------------------------------------------------------------------
         LOOP AT lt_analytics INTO DATA(ls_row).
           out->write( |Rank #{ ls_row-revenue_rank } | &
                       |CoCode: { ls_row-company_code } | &

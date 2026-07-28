@@ -1,3 +1,8 @@
+" ============================================================================
+" CLASS: zcl_pr_ddic_runner
+" PURPOSE: Executable Test Runner for Purchase Requisition DDIC Engine
+" EXECUTION: Press F8 in Eclipse ADT to view output in ABAP Console
+" ============================================================================
 CLASS zcl_pr_ddic_runner DEFINITION
   PUBLIC
   FINAL
@@ -18,9 +23,11 @@ CLASS zcl_pr_ddic_runner IMPLEMENTATION.
     out->write( '          SAP MM MODULE - PURCHASE REQUISITION DATA DICTIONARY (DDIC) ENGINE           ' ).
     out->write( '========================================================================================' ).
 
-    " -------------------------------------------------------------------
-    " 1. INSTANTIATING DEEP DDIC PURCHASE REQUISITION STRUCTURE
-    " -------------------------------------------------------------------
+    " -------------------------------------------------------------------------
+    " STEP 1: Instantiate sample Purchase Requisitions (Deep DDIC Structures)
+    " PR 1: Valid requisition with 2 line items
+    " PR 2: Invalid requisition testing DDIC Domain Value Error catching
+    " -------------------------------------------------------------------------
     DATA(ls_pr_1) = VALUE zcl_pr_ddic_engine=>ty_pr_header_ddic(
       pr_number     = '10000891'
       pr_type       = 'NB' " Standard PR Domain Value
@@ -54,9 +61,9 @@ CLASS zcl_pr_ddic_runner IMPLEMENTATION.
     APPEND ls_pr_1 TO lt_pr_list.
     APPEND ls_pr_2 TO lt_pr_list.
 
-    " -------------------------------------------------------------------
-    " 2. LOOP & VALIDATE DDIC DOMAIN RULES AND CALCULATE TOTALS
-    " -------------------------------------------------------------------
+    " -------------------------------------------------------------------------
+    " STEP 2: Loop through requisitions, validate domain rules, and compute totals
+    " -------------------------------------------------------------------------
     LOOP AT lt_pr_list REFERENCE INTO DATA(lr_pr).
 
       out->write( '----------------------------------------------------------------------------------------' ).
@@ -65,7 +72,7 @@ CLASS zcl_pr_ddic_runner IMPLEMENTATION.
                   |Dept : { lr_pr->department } | &
                   |Created By : { lr_pr->created_by }| ).
 
-      " DDIC Domain Validations
+      " Perform DDIC Domain Validations
       DATA(lv_type_valid)   = lo_engine->validate_pr_type( lr_pr->pr_type ).
       DATA(lv_status_valid) = lo_engine->validate_pr_status( lr_pr->pr_status ).
 
@@ -85,6 +92,7 @@ CLASS zcl_pr_ddic_runner IMPLEMENTATION.
       out->write( |   [DDIC VALIDATED]: PR Type '{ lr_pr->pr_type }' & Status '{ lr_pr->pr_status }' Passed Data Dictionary Validation.| ).
       out->write( '   Line Items:' ).
 
+      " Render Line Item Details
       LOOP AT lr_pr->items INTO DATA(ls_item).
         out->write( |     - Item { ls_item-pr_item_no }: { ls_item-material_no WIDTH = 17 } | &
                     |{ ls_item-material_text WIDTH = 30 } | &

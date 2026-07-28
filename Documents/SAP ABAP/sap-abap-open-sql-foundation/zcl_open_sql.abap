@@ -1,3 +1,9 @@
+" ============================================================================
+" CLASS: zcl_open_sql
+" PURPOSE: Open SQL Demonstration Class in ABAP Cloud
+" GOAL: Demonstrates SELECT SINGLE, INNER JOIN, LEFT JOIN, Aggregations & DISTINCT
+" LANGUAGE VERSION: ABAP Cloud / BTP Steampunk Compatible
+" ============================================================================
 CLASS zcl_open_sql DEFINITION
   PUBLIC
   FINAL
@@ -6,6 +12,7 @@ CLASS zcl_open_sql DEFINITION
   PUBLIC SECTION.
     INTERFACES if_oo_adt_classrun .
 
+    " Structure definition for detailed travel & customer information
     TYPES: BEGIN OF ty_travel_detail,
              travel_id     TYPE /dmo/travel_id,
              agency_id     TYPE /dmo/agency_id,
@@ -17,6 +24,7 @@ CLASS zcl_open_sql DEFINITION
            END OF ty_travel_detail,
            tt_travel_detail TYPE STANDARD TABLE OF ty_travel_detail WITH EMPTY KEY.
 
+    " Structure definition for aggregated agency metrics
     TYPES: BEGIN OF ty_agency_summary,
              agency_id    TYPE /dmo/agency_id,
              travel_count TYPE i,
@@ -38,14 +46,22 @@ CLASS zcl_open_sql IMPLEMENTATION.
     out->write( '          SAP BTP CLOUD - OPEN SQL DEMONSTRATION REPORT (MAPPED FOR BTP TRIAL)         ' ).
     out->write( '========================================================================================' ).
 
+    " Simulated User Input Selection Parameters
     DATA(p_agency_id)   = '070001'.
     DATA(p_currency)    = 'EUR'.
 
+    " -------------------------------------------------------------------------
+    " STEP 1: Input Parameter Validation Check
+    " -------------------------------------------------------------------------
     IF p_agency_id IS INITIAL OR p_currency IS INITIAL.
       out->write( 'ERROR: Please enter both Agency ID and Currency.' ).
       RETURN.
     ENDIF.
 
+    " -------------------------------------------------------------------------
+    " STEP 2: Validate Master Data using SELECT SINGLE
+    " Checks whether Agency ID exists in master entity /dmo/agency
+    " -------------------------------------------------------------------------
     SELECT SINGLE agency_id, name, city
       FROM /dmo/agency
       WHERE agency_id = @p_agency_id
@@ -58,6 +74,10 @@ CLASS zcl_open_sql IMPLEMENTATION.
       out->write( |[VALIDATION OK]: Found Agency { ls_agency_check-name } in City: { ls_agency_check-city }| ).
     ENDIF.
 
+    " -------------------------------------------------------------------------
+    " STEP 3: Count matching rows using DB-side COUNT(*) function
+    " Avoids loading entire internal table into application memory just for counting
+    " -------------------------------------------------------------------------
     SELECT COUNT( * )
       FROM /dmo/travel AS a
       INNER JOIN /dmo/booking AS b ON a~travel_id = b~travel_id
@@ -71,6 +91,11 @@ CLASS zcl_open_sql IMPLEMENTATION.
       out->write( |[COUNT RESULT]: Found { gv_count } matching travel records.| ).
     ENDIF.
 
+    " -------------------------------------------------------------------------
+    " STEP 4: Fetch detailed records using INNER JOIN & LEFT OUTER JOIN
+    " INNER JOIN ensures relational integrity between travel header and bookings
+    " LEFT OUTER JOIN preserves rows even if customer description is missing
+    " -------------------------------------------------------------------------
     SELECT a~travel_id,
            a~agency_id,
            a~customer_id,
@@ -96,6 +121,10 @@ CLASS zcl_open_sql IMPLEMENTATION.
                   |Price        : { ls_detail-total_price ALIGN = RIGHT WIDTH = 8 } { ls_detail-currency_code }| ).
     ENDLOOP.
 
+    " -------------------------------------------------------------------------
+    " STEP 5: Grouped summary using GROUP BY, HAVING & Aggregate Functions
+    " Calculates COUNT, AVG, MAX, and MIN grouped by agency_id
+    " -------------------------------------------------------------------------
     SELECT a~agency_id,
            COUNT( * ) AS travel_count,
            AVG( a~total_price ) AS avg_price,
@@ -120,6 +149,10 @@ CLASS zcl_open_sql IMPLEMENTATION.
                   |Min Price    : { ls_sum-min_price ALIGN = RIGHT WIDTH = 10 } { p_currency }| ).
     ENDLOOP.
 
+    " -------------------------------------------------------------------------
+    " STEP 6: Deduplicate entries using SELECT DISTINCT
+    " Returns unique list of currency codes present in database
+    " -------------------------------------------------------------------------
     SELECT DISTINCT currency_code
       FROM /dmo/travel
       ORDER BY currency_code ASCENDING
