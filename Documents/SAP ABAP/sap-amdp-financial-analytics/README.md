@@ -50,16 +50,6 @@ This project shifts all calculations directly into the SAP HANA Database kernel 
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: What is AMDP, and why do we use it over traditional Open SQL?
-**Senior Answer:** AMDP (ABAP Managed Database Procedures) allows developers to write native SAP HANA database procedures (SQLScript) directly inside ABAP classes using the `if_amdp_marker_hdb` interface. We use AMDP when performing complex calculations, window functions (`RANK() OVER`), or processing millions of rows where Open SQL lacks native DB capabilities or where application server loops cause memory bottlenecks.
-
-### Q2: What is the significance of `OPTIONS READ-ONLY` in an AMDP method definition?
-**Senior Answer:** `OPTIONS READ-ONLY` ensures that the AMDP SQLScript procedure can only query database tables (`SELECT`) and cannot perform modifying operations (`INSERT`, `UPDATE`, `DELETE`). This enforces transactional safety and allows the SAP HANA database execution planner to optimize memory usage and caching.
-
----
-
 ## Execution Output
 
 Running `zcl_amdp_runner` in Eclipse ADT (`F8`):

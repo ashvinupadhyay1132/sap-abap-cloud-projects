@@ -6,11 +6,10 @@ All objects in this repository are written in **ABAP Language Version: ABAP Clou
 
 ---
 
-## 🌟 Senior Developer Project Standards
-Every project in this repository adheres to three enterprise production standards:
-1. **Automated ABAP Unit Tests (`FOR TESTING`):** Uses `cl_abap_unit_assert` for Test-Driven Development (TDD).
-2. **Architecture & Data Flow Diagrams:** Visual sequence flow diagrams in every project `README.md`.
-3. **MNC Technical Interview Guides:** Real-world technical questions & senior developer answers for MNC interview preparation.
+## 🌟 Production Engineering Standards
+Every project in this repository adheres to two enterprise production standards:
+1. **Automated ABAP Unit Tests (`FOR TESTING`):** Uses `cl_abap_unit_assert` for Test-Driven Development (TDD) and clean core code quality.
+2. **Architecture & Data Flow Diagrams:** Visual sequence flow diagrams in every project `README.md` detailing application-to-database interaction.
 
 ---
 

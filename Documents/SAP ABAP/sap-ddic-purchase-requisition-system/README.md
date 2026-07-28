@@ -50,16 +50,6 @@ The module handles procurement requisition structures with header and line-item 
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: Why do we bind numeric fields with `@Semantics.amount` and `@Semantics.quantity` in CDS views?
-**Senior Answer:** In SAP S/4HANA, currency amounts and quantities are meaningless without their reference currency key (e.g. INR, USD) or unit of measure (e.g. ST, LTR, KG). Annotations like `@Semantics.amount.currencyCode` and `@Semantics.quantity.unitOfMeasure` instruct the database and SAP Fiori UI to perform automatic currency conversions, decimal scaling, and formatting.
-
-### Q2: Why use Field Symbols (`ASSIGNING FIELD-SYMBOL(<fs_item>)`) when modifying internal table rows?
-**Senior Answer:** Using `INTO DATA(ls_item)` creates a deep memory copy of the row, requiring explicit `MODIFY` back into the table. Field Symbols act as direct memory pointers to the internal table row, allowing in-place modifications (`<fs_item>-value = ...`) with zero performance overhead and no memory copying.
-
----
-
 ## Execution Output
 
 Running `zcl_pr_ddic_runner` in Eclipse ADT (`F8`):

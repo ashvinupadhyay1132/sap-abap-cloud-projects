@@ -48,16 +48,6 @@ Contains modular Object-Oriented ABAP business engines showcasing ABAP 7.5+ lang
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: What is the benefit of modern ABAP Constructor Expressions like `VALUE #(...)` and `COND #(...)`?
-**Senior Answer:** Constructor expressions allow inline instantiation and conditional logic without requiring verbose `IF/ELSE` statements or temporary local variables. `COND #(...)` evaluates conditions inline at assignment time, reducing code length and eliminating variable pollution.
-
-### Q2: Why use `LOOP AT itab REFERENCE INTO lr_ref` instead of `LOOP AT itab INTO ls_struct`?
-**Senior Answer:** `INTO ls_struct` creates a full memory copy of the row, and modifications require a subsequent `MODIFY itab FROM ls_struct`. Using `REFERENCE INTO lr_ref` creates a lightweight reference pointer, allowing direct field mutation (`lr_ref->field = ...`) without copying data or re-modifying the table.
-
----
-
 ## Execution Output
 
 Running `zcl_hr_bonus_calc` in Eclipse ADT (`F8`):

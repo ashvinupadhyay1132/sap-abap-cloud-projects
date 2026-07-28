@@ -55,16 +55,6 @@ This project implements a managed RAP scenario with draft capabilities for Trave
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: What is the difference between Managed RAP and Unmanaged RAP?
-**Senior Answer:** In **Managed RAP**, the RAP framework automatically handles the Standard Create, Update, and Delete operations to the database persistence table. In **Unmanaged RAP**, the developer must manually code the CRUD lifecycle operations inside the Behavior Pool (ABAP handler class), which is mandatory when wrapping existing BAPIs or legacy function modules.
-
-### Q2: What is the purpose of `IN LOCAL MODE` in Entity Manipulation Language (EML)?
-**Senior Answer:** Using `IN LOCAL MODE` inside a RAP Behavior Pool bypasses feature control and authorization checks. It allows internal framework code (such as Determinations or Actions) to modify draft/active instances without triggering infinite validation loops or failing user privilege checks.
-
----
-
 ## Execution Output
 
 Running `zcl_rap_test_runner` in Eclipse ADT (`F8`):

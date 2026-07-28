@@ -47,16 +47,6 @@ Demonstrates Open SQL query patterns in ABAP Cloud using released SAP BTP entiti
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: Why should we use `COUNT(*)` at database level instead of `SELECT ... INTO TABLE` and then using `lines( lt_itab )`?
-**Senior Answer:** Running `SELECT INTO TABLE` loads all table records across the network interface into the ABAP Application Server's memory. When counting thousands or millions of rows, this causes severe memory allocation overhead. Using `SELECT COUNT(*)` pushes the calculation into the database engine, returning only a single integer value (4 bytes) back to ABAP.
-
-### Q2: What is the main difference between `WHERE` and `HAVING` clauses in Open SQL?
-**Senior Answer:** The `WHERE` clause filters individual raw rows **before** any aggregation takes place. The `HAVING` clause filters aggregated group results **after** the `GROUP BY` clause has processed the dataset (e.g., `HAVING COUNT(*) > 10`).
-
----
-
 ## Execution Output
 
 Running `zcl_open_sql` in Eclipse ADT (`F8`):

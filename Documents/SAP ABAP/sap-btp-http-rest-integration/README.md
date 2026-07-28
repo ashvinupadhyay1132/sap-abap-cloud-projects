@@ -44,16 +44,6 @@ Demonstrates how to connect to third-party REST/JSON API endpoints from ABAP Clo
 
 ---
 
-## How to Answer in MNC Technical Interviews
-
-### Q1: How do we consume external REST APIs in ABAP Cloud / BTP without legacy HTTP function modules?
-**Senior Answer:** In ABAP Cloud, legacy classes like `CL_HTTP_CLIENT` are released with restrictions. We use `cl_http_destination_provider=>create_by_url()` or `create_by_destination_service()` to obtain an HTTP destination instance, and then pass it to `cl_web_http_client_manager=>create_by_http_destination()` to execute `GET`, `POST`, or `PUT` requests asynchronously or synchronously.
-
-### Q2: How do you handle HTTP client exceptions in production ABAP Cloud code?
-**Senior Answer:** We wrap the HTTP execution in a `TRY...CATCH` block catching `cx_web_http_client_error` and generic `cx_root`. Always ensure `lo_http_client->close()` is executed to prevent open socket leaks on the SAP BTP application server.
-
----
-
 ## Execution Output
 
 Running `zcl_api_consumer` in Eclipse ADT (`F8`):
