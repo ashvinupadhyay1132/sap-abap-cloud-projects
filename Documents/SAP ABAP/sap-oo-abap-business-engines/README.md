@@ -4,6 +4,29 @@ Contains modular Object-Oriented ABAP business engines showcasing ABAP 7.5+ lang
 
 ---
 
+## Architecture & Data Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ABAP Application Layer                      │
+│     ZCL_ORDER_PROCESSOR / Unit Test ZCL_TEST_ORDER_PROCESSOR│
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Passes Order Input Structure
+┌──────────────────────────────▼──────────────────────────────┐
+│                  ZCL_ORDER_PROCESSOR                        │
+│                                                             │
+│  1. MOQ Validation Check (MOQ >= 30,000 INR)                │
+│  2. Tiered Discount Engine: COND #( WHEN 'VIP' THEN 20% )   │
+│  3. Reference Iteration: LOOP AT ... REFERENCE INTO         │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Returns Processed Result
+┌──────────────────────────────▼──────────────────────────────┐
+│           ABAP Console Log / Unit Test Assertions           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Included Engines
 
 ### 1. Sales Order Discount Processor (`zcl_order_processor.abap`)
@@ -21,6 +44,17 @@ Contains modular Object-Oriented ABAP business engines showcasing ABAP 7.5+ lang
 
 - `zcl_order_processor.abap`: Sales Order processor class.
 - `zcl_hr_bonus_calc.abap`: HR Bonus calculator class.
+- `zcl_test_order_processor.abap`: Automated ABAP Unit Test suite (`FOR TESTING`).
+
+---
+
+## How to Answer in MNC Technical Interviews
+
+### Q1: What is the benefit of modern ABAP Constructor Expressions like `VALUE #(...)` and `COND #(...)`?
+**Senior Answer:** Constructor expressions allow inline instantiation and conditional logic without requiring verbose `IF/ELSE` statements or temporary local variables. `COND #(...)` evaluates conditions inline at assignment time, reducing code length and eliminating variable pollution.
+
+### Q2: Why use `LOOP AT itab REFERENCE INTO lr_ref` instead of `LOOP AT itab INTO ls_struct`?
+**Senior Answer:** `INTO ls_struct` creates a full memory copy of the row, and modifications require a subsequent `MODIFY itab FROM ls_struct`. Using `REFERENCE INTO lr_ref` creates a lightweight reference pointer, allowing direct field mutation (`lr_ref->field = ...`) without copying data or re-modifying the table.
 
 ---
 

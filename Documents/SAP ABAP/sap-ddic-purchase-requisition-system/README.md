@@ -4,6 +4,29 @@ A Purchase Requisition (PR) data processing module built for SAP Materials Manag
 
 ---
 
+## Architecture & Data Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ABAP Application Layer                      │
+│        ZCL_PR_DDIC_RUNNER / Unit Test ZCL_TEST_PR_DDIC      │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Passes Header & Line Items
+┌──────────────────────────────▼──────────────────────────────┐
+│                  ZCL_PR_DDIC_ENGINE                         │
+│                                                             │
+│  1. Domain Check: validate_pr_type ('NB', 'FO', 'RV')       │
+│  2. Domain Check: validate_pr_status ('D', 'S', 'A', 'R')   │
+│  3. In-Place Field Symbol Loop: Calculate Total PR Amount   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Returns Validated Totals
+┌──────────────────────────────▼──────────────────────────────┐
+│           ABAP Console Log / Unit Test Assertions           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Technical Overview
 
 The module handles procurement requisition structures with header and line-item relationships. It enforces data dictionary constraints, quantity/currency binding semantics, and memory-efficient internal table operations.
@@ -13,7 +36,7 @@ The module handles procurement requisition structures with header and line-item 
 - **Semantics:** Binds numeric fields using `@Semantics.amount.currencyCode` and `@Semantics.quantity.unitOfMeasure`.
 - **Deep Structures:** Uses `ty_pr_header_ddic` containing nested line items.
 - **Secondary Keys:** Uses table type `tt_pr_items_ddic` with `NON-UNIQUE SORTED KEY item_key COMPONENTS pr_item_no`.
-- **Field Symbols:** Modifies line-item rows in-place using `ASSIGNING FIELD-SYMBOL(<fs_item>)`.
+- **Automated ABAP Unit Tests:** Class `zcl_test_pr_ddic` verifies domain rules and line-item calculations.
 
 ---
 
@@ -23,12 +46,23 @@ The module handles procurement requisition structures with header and line-item 
 - `zddic_pr_item.acds`: CDS Child View Entity for PR Line Items.
 - `zcl_pr_ddic_engine.abap`: Core engine class containing DDIC types, domain checks, and total price calculation.
 - `zcl_pr_ddic_runner.abap`: Executable test runner implementing `if_oo_adt_classrun`.
+- `zcl_test_pr_ddic.abap`: Automated ABAP Unit Test suite (`FOR TESTING`).
+
+---
+
+## How to Answer in MNC Technical Interviews
+
+### Q1: Why do we bind numeric fields with `@Semantics.amount` and `@Semantics.quantity` in CDS views?
+**Senior Answer:** In SAP S/4HANA, currency amounts and quantities are meaningless without their reference currency key (e.g. INR, USD) or unit of measure (e.g. ST, LTR, KG). Annotations like `@Semantics.amount.currencyCode` and `@Semantics.quantity.unitOfMeasure` instruct the database and SAP Fiori UI to perform automatic currency conversions, decimal scaling, and formatting.
+
+### Q2: Why use Field Symbols (`ASSIGNING FIELD-SYMBOL(<fs_item>)`) when modifying internal table rows?
+**Senior Answer:** Using `INTO DATA(ls_item)` creates a deep memory copy of the row, requiring explicit `MODIFY` back into the table. Field Symbols act as direct memory pointers to the internal table row, allowing in-place modifications (`<fs_item>-value = ...`) with zero performance overhead and no memory copying.
 
 ---
 
 ## Execution Output
 
-Running `zcl_pr_ddic_runner` in Eclipse ADT (`F8`) produces the following output:
+Running `zcl_pr_ddic_runner` in Eclipse ADT (`F8`):
 
 ```text
 ========================================================================================

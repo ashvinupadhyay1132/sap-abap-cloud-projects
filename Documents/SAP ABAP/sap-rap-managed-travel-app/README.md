@@ -4,29 +4,26 @@ A transactional Business Object implementation built on the SAP RESTful Applicat
 
 ---
 
-## Architecture Overview
-
-This project implements a managed RAP scenario with draft capabilities for Travel and Booking entities.
+## Architecture & Data Flow Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│          Service Definition (ZSRV_TRAVEL_M)                 │
+│          Service Exposure (ZSRV_TRAVEL_M - OData V4)        │
 └──────────────────────────────┬──────────────────────────────┘
                                │ Exposes
 ┌──────────────────────────────▼──────────────────────────────┐
 │       Behavior Definition (ZBDEF_TRAVEL_M - with draft)     │
 │   - Draft Tables: ztravel_d, zbooking_d                     │
-│   - Lock & Authorization Master                             │
 │   - Actions: acceptTravel, rejectTravel                     │
 │   - Validations: validateCustomer, validateDates            │
 │   - Determination: calculateTotalPrice                      │
 └──────────────────────────────┬──────────────────────────────┘
                                │ Implements
 ┌──────────────────────────────▼──────────────────────────────┐
-│        Behavior Pool Handler Class (ZCL_BP_TRAVEL_M)        │
+│       Behavior Pool Handler Class (ZCL_BP_TRAVEL_M)         │
 │   - EML: MODIFY ENTITIES OF zcds_i_travel_m IN LOCAL MODE   │
 └──────────────────────────────┬──────────────────────────────┘
-                               │ Queries
+                               │ Reads/Modifies
 ┌──────────────────────────────▼──────────────────────────────┐
 │         CDS View Entities (ZCDS_I_TRAVEL_M / BOOKING_M)     │
 └─────────────────────────────────────────────────────────────┘
@@ -34,20 +31,43 @@ This project implements a managed RAP scenario with draft capabilities for Trave
 
 ---
 
+## Technical Overview
+
+This project implements a managed RAP scenario with draft capabilities for Travel and Booking entities.
+
+### Key Features Applied:
+- **Managed Persistence:** Automatic CREATE, UPDATE, DELETE handled by the RAP framework.
+- **Draft Handling:** Transactional draft tables (`ztravel_d`, `zbooking_d`) allowing multi-step editing without locking real DB tables.
+- **Custom Actions:** `acceptTravel` and `rejectTravel` triggered via EML (`MODIFY ENTITIES`).
+- **Automated ABAP Unit Tests:** Class `zcl_test_rap_travel` verifies RAP validations and date sequencing.
+
+---
+
 ## File Structure
 
-- `zcds_i_travel_m.acds`: Root View Entity for Travel Header (includes composition to `_Booking`, ETag annotations, and master data associations).
+- `zcds_i_travel_m.acds`: Root View Entity for Travel Header.
 - `zcds_i_booking_m.acds`: Child View Entity for Flight Bookings.
-- `zbdef_travel_m.abapbdef`: Behavior Definition configuring draft actions (`Edit`, `Activate`, `Discard`), field control, validations, determinations, and custom actions.
-- `zcl_bp_travel_m.abap`: Global Behavior Pool class implementing action handlers (`acceptTravel`, `rejectTravel`), validations (`validateCustomer`, `validateDates`), and determinations (`calculateTotalPrice`).
+- `zbdef_travel_m.abapbdef`: Behavior Definition configuring draft actions (`Edit`, `Activate`, `Discard`), validations, determinations, and custom actions.
+- `zcl_bp_travel_m.abap`: Global Behavior Pool class implementing action handlers and validations.
 - `zsrv_travel_m.srvd`: Service Definition exposing entities for OData V4 consumption.
 - `zcl_rap_test_runner.abap`: Executable test runner simulating EML operations (`MODIFY ENTITIES`).
+- `zcl_test_rap_travel.abap`: Automated ABAP Unit Test suite (`FOR TESTING`).
+
+---
+
+## How to Answer in MNC Technical Interviews
+
+### Q1: What is the difference between Managed RAP and Unmanaged RAP?
+**Senior Answer:** In **Managed RAP**, the RAP framework automatically handles the Standard Create, Update, and Delete operations to the database persistence table. In **Unmanaged RAP**, the developer must manually code the CRUD lifecycle operations inside the Behavior Pool (ABAP handler class), which is mandatory when wrapping existing BAPIs or legacy function modules.
+
+### Q2: What is the purpose of `IN LOCAL MODE` in Entity Manipulation Language (EML)?
+**Senior Answer:** Using `IN LOCAL MODE` inside a RAP Behavior Pool bypasses feature control and authorization checks. It allows internal framework code (such as Determinations or Actions) to modify draft/active instances without triggering infinite validation loops or failing user privilege checks.
 
 ---
 
 ## Execution Output
 
-Running `zcl_rap_test_runner` in Eclipse ADT (`F8`) produces the following output:
+Running `zcl_rap_test_runner` in Eclipse ADT (`F8`):
 
 ```text
 ========================================================================================

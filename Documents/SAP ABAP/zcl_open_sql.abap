@@ -1,0 +1,170 @@
+CLASS zcl_open_sql DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun .
+
+    " 1. TYPE DEFINITIONS FOR BTP ABAP CLOUD
+    TYPES: BEGIN OF ty_travel_detail,
+             travel_id     TYPE /dmo/travel_id,
+             agency_id     TYPE /dmo/agency_id,
+             customer_id   TYPE /dmo/customer_id,
+             booking_fee   TYPE /dmo/booking_fee,
+             total_price   TYPE /dmo/total_price,
+             currency_code TYPE /dmo/currency_code,
+             customer_name TYPE string, " Joined from Customer View
+           END OF ty_travel_detail,
+           tt_travel_detail TYPE STANDARD TABLE OF ty_travel_detail WITH EMPTY KEY.
+
+    TYPES: BEGIN OF ty_agency_summary,
+             agency_id     TYPE /dmo/agency_id,
+             travel_count  TYPE i,
+             avg_price     TYPE /dmo/total_price,
+             max_price     TYPE /dmo/total_price,
+             min_price     TYPE /dmo/total_price,
+           END OF ty_agency_summary,
+           tt_agency_summary TYPE STANDARD TABLE OF ty_agency_summary WITH EMPTY KEY.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+CLASS zcl_open_sql IMPLEMENTATION.
+
+  METHOD if_oo_adt_classrun~main.
+
+    out->write( '========================================================================================' ).
+    out->write( '          SAP BTP CLOUD - OPEN SQL DEMONSTRATION REPORT (MAPPED FOR BTP TRIAL)         ' ).
+    out->write( '========================================================================================' ).
+
+    " User Inputs (Simulated in Cloud since PARAMETERS / GUI WRITE are not supported in BTP Cloud)
+    DATA(p_agency_id)   = '070001'. " Simulated Agency ID Input (Like Plant)
+    DATA(p_currency)    = 'EUR'.    " Simulated Currency Input (Like Material Type)
+
+    " -------------------------------------------------------------------
+    " STEP 1: INPUT VALIDATION
+    " -------------------------------------------------------------------
+    IF p_agency_id IS INITIAL OR p_currency IS INITIAL.
+      out->write( 'ERROR: Please enter both Agency ID and Currency.' ).
+      RETURN.
+    ENDIF.
+
+    " -------------------------------------------------------------------
+    " STEP 2: VALIDATE AGENCY USING SELECT SINGLE
+    " -------------------------------------------------------------------
+    " In SAP BTP Cloud, we validate against released entity /dmo/agency
+    SELECT SINGLE agency_id, name, city
+      FROM /dmo/agency
+      WHERE agency_id = @p_agency_id
+      INTO @DATA(ls_agency_check).
+
+    IF sy-subrc <> 0.
+      out->write( |ERROR: Agency ID { p_agency_id } does not exist in BTP Master Data.| ).
+      RETURN.
+    ELSE.
+      out->write( |[VALIDATION OK]: Found Agency { ls_agency_check-name } in City: { ls_agency_check-city }| ).
+    ENDIF.
+
+    " -------------------------------------------------------------------
+    " STEP 3: COUNT MATCHING RECORDS USING COUNT(*)
+    " -------------------------------------------------------------------
+    SELECT COUNT( * )
+      FROM /dmo/travel AS a
+      INNER JOIN /dmo/booking AS b ON a~travel_id = b~travel_id
+      WHERE a~agency_id = @p_agency_id AND a~currency_code = @p_currency
+      INTO @DATA(gv_count).
+
+    IF gv_count = 0.
+      out->write( |No travel records found for Agency: { p_agency_id } and Currency: { p_currency }| ).
+      RETURN.
+    ELSE.
+      out->write( |[COUNT RESULT]: Found { gv_count } matching travel records.| ).
+    ENDIF.
+
+    " -------------------------------------------------------------------
+    " STEP 4: FETCH DETAIL DATA USING INNER JOIN & LEFT OUTER JOIN
+    " -------------------------------------------------------------------
+    " /dmo/travel (Header) INNER JOIN /dmo/booking (Items)
+    " LEFT OUTER JOIN /dmo/customer (Master Data Description)
+    SELECT a~travel_id,
+           a~agency_id,
+           a~customer_id,
+           a~booking_fee,
+           a~total_price,
+           a~currency_code,
+           c~first_name && ' ' && c~last_name AS customer_name
+      FROM /dmo/travel AS a
+      INNER JOIN /dmo/booking AS b ON a~travel_id = b~travel_id
+      LEFT OUTER JOIN /dmo/customer AS c ON a~customer_id = c~customer_id
+      WHERE a~agency_id = @p_agency_id AND a~currency_code = @p_currency
+      ORDER BY a~travel_id ASCENDING
+      INTO TABLE @DATA(lt_travel_details).
+
+    " -------------------------------------------------------------------
+    " STEP 5: DISPLAY DETAIL REPORT
+    " -------------------------------------------------------------------
+    out->write( '----------------------------------------------------------------------------------------' ).
+    out->write( '                         DETAIL REPORT (JOINS & SELECTION)                              ' ).
+    out->write( '----------------------------------------------------------------------------------------' ).
+
+    LOOP AT lt_travel_details INTO DATA(ls_detail).
+      out->write( |Travel ID    : { ls_detail-travel_id WIDTH = 10 } | &
+                  |Customer ID  : { ls_detail-customer_id WIDTH = 8 } | &
+                  |Customer Name: { ls_detail-customer_name WIDTH = 20 } | &
+                  |Price        : { ls_detail-total_price ALIGN = RIGHT WIDTH = 8 } { ls_detail-currency_code }| ).
+    ENDLOOP.
+
+    " -------------------------------------------------------------------
+    " STEP 6: GROUPED SUMMARY USING AGGREGATE FUNCTIONS (GROUP BY, HAVING)
+    " -------------------------------------------------------------------
+    " COUNT, AVG, MAX, MIN, GROUP BY, HAVING, ORDER BY
+    SELECT a~agency_id,
+           COUNT( * ) AS travel_count,
+           AVG( a~total_price ) AS avg_price,
+           MAX( a~total_price ) AS max_price,
+           MIN( a~total_price ) AS min_price
+      FROM /dmo/travel AS a
+      WHERE a~currency_code = @p_currency
+      GROUP BY a~agency_id
+      HAVING COUNT( * ) > 0
+      ORDER BY COUNT( * ) DESCENDING
+      INTO TABLE @DATA(lt_summary).
+
+    " -------------------------------------------------------------------
+    " STEP 7: DISPLAY SUMMARY REPORT
+    " -------------------------------------------------------------------
+    out->write( '----------------------------------------------------------------------------------------' ).
+    out->write( '                 SUMMARY REPORT (GROUP BY, COUNT, AVG, MAX, MIN, HAVING)               ' ).
+    out->write( '----------------------------------------------------------------------------------------' ).
+
+    LOOP AT lt_summary INTO DATA(ls_sum).
+      out->write( |Agency ID    : { ls_sum-agency_id WIDTH = 8 } | &
+                  |Travel Count : { ls_sum-travel_count WIDTH = 4 } | &
+                  |Avg Price    : { ls_sum-avg_price ALIGN = RIGHT WIDTH = 10 } { p_currency } | &
+                  |Max Price    : { ls_sum-max_price ALIGN = RIGHT WIDTH = 10 } { p_currency } | &
+                  |Min Price    : { ls_sum-min_price ALIGN = RIGHT WIDTH = 10 } { p_currency }| ).
+    ENDLOOP.
+
+    " -------------------------------------------------------------------
+    " STEP 8: SELECT DISTINCT EXAMPLE
+    " -------------------------------------------------------------------
+    SELECT DISTINCT currency_code
+      FROM /dmo/travel
+      ORDER BY currency_code ASCENDING
+      INTO TABLE @DATA(lt_currencies).
+
+    out->write( '----------------------------------------------------------------------------------------' ).
+    out->write( '                 SELECT DISTINCT EXAMPLE (UNIQUE CURRENCIES IN BTP)                    ' ).
+    out->write( '----------------------------------------------------------------------------------------' ).
+
+    LOOP AT lt_currencies INTO DATA(ls_curr).
+      out->write( |Currency Code: { ls_curr-currency_code }| ).
+    ENDLOOP.
+
+    out->write( '========================================================================================' ).
+
+  ENDMETHOD.
+
+ENDCLASS.

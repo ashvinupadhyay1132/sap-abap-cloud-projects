@@ -4,6 +4,30 @@ Implements database code pushdown for financial profitability calculations using
 
 ---
 
+## Architecture & Data Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 ABAP Application Layer                      │
+│        ZCL_AMDP_RUNNER / Unit Test ZCL_TEST_AMDP_ANALYTICS  │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Passes ITAB :it_postings
+┌──────────────────────────────▼──────────────────────────────┐
+│             SAP HANA Database Engine Kernel                 │
+│    ZCL_AMDP_FINANCIAL_ANALYTICS=>get_financial_revenue_analytics
+│                                                             │
+│  1. SQLScript Aggregation: SUM(revenue), SUM(cogs)          │
+│  2. SQLScript Window Function: RANK() OVER (ORDER BY rev)   │
+│  3. SQLScript Expression: CASE WHEN Net_Profit >= 50000     │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Returns ETAB :et_analytics
+┌──────────────────────────────▼──────────────────────────────┐
+│                ABAP Console / TDD Assertions                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Technical Overview
 
 When calculating profit margins and ranking high-volume financial transactions across multiple company codes and divisions, processing data inside ABAP `LOOP` statements causes performance bottlenecks. 
@@ -14,51 +38,31 @@ This project shifts all calculations directly into the SAP HANA Database kernel 
 - **AMDP Interface:** Class `zcl_amdp_financial_analytics` implements `if_amdp_marker_hdb`.
 - **HANA SQLScript:** Method `get_financial_revenue_analytics` is defined as `BY DATABASE PROCEDURE FOR HDB LANGUAGE SQLSCRIPT OPTIONS READ-ONLY`.
 - **Window Functions:** Uses `RANK() OVER (ORDER BY total_revenue DESC)` inside SQLScript to rank business divisions by revenue.
-- **SQLScript Expressions:** Evaluates profit margins (`Revenue - COGS - OPEX`) and maps status categories (`HIGH MARGIN`, `MODERATE MARGIN`, `LOW MARGIN / LOSS`) directly in database memory.
+- **Automated ABAP Unit Tests:** Class `zcl_test_amdp_analytics` verifies calculations using `cl_abap_unit_assert`.
 
 ---
 
 ## File Structure
 
 - `zcl_amdp_financial_analytics.abap`: Core AMDP class containing interface definition, types, and SQLScript procedure.
-- `zcl_amdp_runner.abap`: Test runner class implementing `if_oo_adt_classrun` to populate sample financial data, invoke the procedure, and print the output log.
+- `zcl_amdp_runner.abap`: Test runner class implementing `if_oo_adt_classrun` to populate sample financial data, invoke the procedure, and print output logs.
+- `zcl_test_amdp_analytics.abap`: Automated ABAP Unit Test suite (`FOR TESTING`).
 
 ---
 
-## Data Schema & Structures
+## How to Answer in MNC Technical Interviews
 
-```abap
-TYPES: BEGIN OF ty_financial_posting,
-         company_code TYPE string,
-         division     TYPE string,
-         fiscal_year  TYPE string,
-         posting_date TYPE dats,
-         revenue      TYPE decfloat34,
-         cogs         TYPE decfloat34,
-         opex         TYPE decfloat34,
-         currency     TYPE string,
-       END OF ty_financial_posting.
+### Q1: What is AMDP, and why do we use it over traditional Open SQL?
+**Senior Answer:** AMDP (ABAP Managed Database Procedures) allows developers to write native SAP HANA database procedures (SQLScript) directly inside ABAP classes using the `if_amdp_marker_hdb` interface. We use AMDP when performing complex calculations, window functions (`RANK() OVER`), or processing millions of rows where Open SQL lacks native DB capabilities or where application server loops cause memory bottlenecks.
 
-TYPES: BEGIN OF ty_financial_analytics,
-         company_code  TYPE string,
-         division      TYPE string,
-         total_revenue TYPE decfloat34,
-         total_cogs    TYPE decfloat34,
-         total_opex    TYPE decfloat34,
-         gross_profit  TYPE decfloat34,
-         net_profit    TYPE decfloat34,
-         margin_pct    TYPE decfloat34,
-         margin_status TYPE string,
-         revenue_rank  TYPE i,
-         currency      TYPE string,
-       END OF ty_financial_analytics.
-```
+### Q2: What is the significance of `OPTIONS READ-ONLY` in an AMDP method definition?
+**Senior Answer:** `OPTIONS READ-ONLY` ensures that the AMDP SQLScript procedure can only query database tables (`SELECT`) and cannot perform modifying operations (`INSERT`, `UPDATE`, `DELETE`). This enforces transactional safety and allows the SAP HANA database execution planner to optimize memory usage and caching.
 
 ---
 
 ## Execution Output
 
-Running `zcl_amdp_runner` in Eclipse ADT (`F8`) produces the following console output:
+Running `zcl_amdp_runner` in Eclipse ADT (`F8`):
 
 ```text
 ========================================================================================
