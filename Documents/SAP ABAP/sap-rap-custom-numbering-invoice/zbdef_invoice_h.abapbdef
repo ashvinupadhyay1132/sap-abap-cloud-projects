@@ -1,0 +1,33 @@
+managed implementation in class zcl_bp_invoice_h unique;
+strict ( 2 );
+
+define behavior for ZCDS_I_INVOICE_H alias InvoiceHeader
+persistent table /dmo/travel
+lock master
+authorization master ( instance )
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) Invoice_ID;
+  field ( mandatory ) Customer_ID, Company_Code;
+
+  /* Early Custom Numbering engine declaration */
+  early numbering;
+
+  association _Items { create; }
+}
+
+define behavior for ZCDS_I_INVOICE_I alias InvoiceItem
+persistent table /dmo/booking
+lock dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+
+  field ( readonly ) Invoice_ID, Item_Number;
+
+  association _Header;
+}

@@ -1,0 +1,31 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Invoice Line Item View Entity'
+
+define view entity ZCDS_I_INVOICE_I
+  as select from /dmo/booking as InvoiceItem
+
+  association to parent ZCDS_I_INVOICE_H as _Header on $projection.Invoice_ID = _Header.Invoice_ID
+  association [1..1] to /DMO/I_Customer  as _Customer on $projection.Customer_ID = _Customer.CustomerID
+  association [1..1] to /DMO/I_Carrier   as _Product  on $projection.Product_Group = _Product.AirlineID
+{
+  key travel_id     as Invoice_ID,
+  key booking_id    as Item_Number,
+
+      booking_date  as Billing_Date,
+      customer_id   as Customer_ID,
+      carrier_id    as Product_Group,
+      connection_id as Product_ID,
+
+      @Semantics.quantity.unitOfMeasure: 'Unit_Of_Measure'
+      booking_id    as Billed_Quantity,
+      currency_code as Unit_Of_Measure,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      flight_price  as Unit_Price,
+      currency_code as Currency,
+
+      /* Associations */
+      _Header,
+      _Customer,
+      _Product
+}
