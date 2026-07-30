@@ -45,6 +45,11 @@ Every project in this repository adheres to two enterprise production standards:
 
 ---
 
+## License
+This repository is licensed under the [MIT License](./LICENSE).
+
+---
+
 ## Author
 **Ashvin Upadhyay** (`ashvinupadhyay1132`)  
 ABAP Cloud & BTP Developer
