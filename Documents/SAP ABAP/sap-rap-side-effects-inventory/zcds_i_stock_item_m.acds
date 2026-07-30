@@ -1,0 +1,28 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Storage Bin Item View Entity'
+
+define view entity ZCDS_I_STOCK_ITEM_M
+  as select from /dmo/booking as StockBin
+
+  association to parent ZCDS_I_INVENTORY_M as _Inventory on $projection.Material_ID = _Inventory.Material_ID
+  association [1..1] to /DMO/I_Carrier     as _BinType   on $projection.Bin_Type    = _BinType.AirlineID
+{
+  key travel_id     as Material_ID,
+  key booking_id    as Bin_ID,
+
+      booking_date  as Placement_Date,
+      carrier_id    as Bin_Type,
+      connection_id as Bin_Location,
+
+      @Semantics.quantity.unitOfMeasure: 'Unit_Of_Measure'
+      booking_id    as Bin_Stock_Qty,
+      currency_code as Unit_Of_Measure,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      flight_price  as Bin_Value,
+      currency_code as Currency,
+
+      /* Associations */
+      _Inventory,
+      _BinType
+}

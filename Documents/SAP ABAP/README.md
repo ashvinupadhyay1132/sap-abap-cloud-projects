@@ -17,6 +17,7 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
+| [`sap-rap-side-effects-inventory`](./sap-rap-side-effects-inventory) | RAP Side Effects & Feature Control | `@Consumption.sideEffects`, Dynamic Features, Determinations, ABAP Unit Tests |
 | [`sap-rap-custom-numbering-invoice`](./sap-rap-custom-numbering-invoice) | RAP Early Custom Numbering | Managed RAP, `early numbering`, `cl_number_range` API, ABAP Unit Tests |
 | [`sap-rap-unmanaged-sales-order`](./sap-rap-unmanaged-sales-order) | Unmanaged BO & Legacy BAPI | Unmanaged RAP, Custom Transactional Buffer, Saver Sequence, ABAP Unit Tests |
 | [`sap-amdp-financial-analytics`](./sap-amdp-financial-analytics) | Database Code Pushdown | AMDP, HANA SQLScript, Window Functions (`RANK`), ABAP Unit Tests |

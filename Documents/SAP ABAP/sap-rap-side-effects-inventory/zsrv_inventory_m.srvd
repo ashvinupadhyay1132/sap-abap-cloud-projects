@@ -1,0 +1,5 @@
+@EndUserText.label: 'Inventory Stock Management OData V4 Service Exposure'
+define service ZSRV_INVENTORY_M {
+  expose ZCDS_I_INVENTORY_M  as InventoryHeader;
+  expose ZCDS_I_STOCK_ITEM_M as StorageBinItem;
+}
