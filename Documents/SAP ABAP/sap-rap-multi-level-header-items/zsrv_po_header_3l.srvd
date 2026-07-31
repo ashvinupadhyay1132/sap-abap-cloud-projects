@@ -1,0 +1,6 @@
+@EndUserText.label: '3-Level Purchase Order OData V4 Service Exposure'
+define service ZSRV_PO_HEADER_3L {
+  expose ZCDS_I_PO_HEADER_3L as POHeader;
+  expose ZCDS_I_PO_ITEM_3L   as POItem;
+  expose ZCDS_I_PO_SCHED_3L  as POScheduleLine;
+}

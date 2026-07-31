@@ -1,0 +1,52 @@
+managed implementation in class zcl_bp_po_header_3l unique;
+strict ( 2 );
+
+/* Level 1: Root Purchase Order Header */
+define behavior for ZCDS_I_PO_HEADER_3L alias POHeader
+persistent table /dmo/travel
+lock master
+authorization master ( instance )
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) Purchase_Order_ID;
+  field ( mandatory ) Purchasing_Org, Vendor_ID;
+
+  /* Enable Level 2 Deep Composition Creation */
+  association _Items { create; }
+}
+
+/* Level 2: Child Purchase Order Item */
+define behavior for ZCDS_I_PO_ITEM_3L alias POItem
+persistent table /dmo/booking
+lock dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+
+  field ( readonly ) Purchase_Order_ID, Item_Position;
+  field ( mandatory ) Material_ID;
+
+  association _Header;
+
+  /* Enable Level 3 Deep Composition Creation */
+  association _ScheduleLines { create; }
+}
+
+/* Level 3: Grandchild Delivery Schedule Line */
+define behavior for ZCDS_I_PO_SCHED_3L alias POScheduleLine
+persistent table /dmo/booking
+lock dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+
+  field ( readonly ) Purchase_Order_ID, Item_Position, Schedule_Line_No;
+
+  association _Item;
+  association _Header;
+}

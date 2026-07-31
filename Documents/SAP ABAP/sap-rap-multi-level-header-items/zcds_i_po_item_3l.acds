@@ -1,0 +1,37 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: '3-Level Purchase Order Item View Entity'
+
+define view entity ZCDS_I_PO_ITEM_3L
+  as select from /dmo/booking as POItem
+
+  /* Association to Level 1 Root Parent */
+  association to parent ZCDS_I_PO_HEADER_3L as _Header on $projection.Purchase_Order_ID = _Header.Purchase_Order_ID
+
+  /* Level 3 Composition: Delivery Schedule Lines */
+  composition [0..*] of ZCDS_I_PO_SCHED_3L as _ScheduleLines
+
+  association [1..1] to /DMO/I_Customer    as _Vendor   on $projection.Vendor_ID   = _Vendor.CustomerID
+  association [1..1] to /DMO/I_Carrier     as _Material on $projection.Material_ID = _Material.AirlineID
+{
+  key travel_id     as Purchase_Order_ID,
+  key booking_id    as Item_Position,
+
+      booking_date  as Item_Creation_Date,
+      customer_id   as Vendor_ID,
+      carrier_id    as Material_ID,
+      connection_id as Material_Group,
+
+      @Semantics.quantity.unitOfMeasure: 'Unit_Of_Measure'
+      booking_id    as Order_Quantity,
+      currency_code as Unit_Of_Measure,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      flight_price  as Price_Per_Unit,
+      currency_code as Currency,
+
+      /* Associations */
+      _Header,
+      _ScheduleLines,
+      _Vendor,
+      _Material
+}
