@@ -1,0 +1,15 @@
+managed implementation in class zcl_bp_sales_pricing unique;
+strict ( 2 );
+
+define behavior for ZCDS_I_SALES_PRICING alias SalesOrder
+persistent table /dmo/travel
+lock master
+authorization master ( instance )
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) Sales_Order_ID;
+  field ( mandatory ) Customer_ID, Base_List_Price;
+}
