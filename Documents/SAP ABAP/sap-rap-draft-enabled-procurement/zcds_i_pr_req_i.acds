@@ -1,0 +1,31 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Purchase Requisition Item View Entity'
+
+define view entity ZCDS_I_PR_REQ_I
+  as select from /dmo/booking as RequisitionItem
+
+  association to parent ZCDS_I_PR_REQ_H as _Header on $projection.Requisition_ID = _Header.Requisition_ID
+  association [1..1] to /DMO/I_Customer as _Vendor on $projection.Vendor_ID = _Vendor.CustomerID
+  association [1..1] to /DMO/I_Carrier  as _Material on $projection.Material_Group = _Material.AirlineID
+{
+  key travel_id     as Requisition_ID,
+  key booking_id    as Item_No,
+
+      booking_date  as Request_Date,
+      customer_id   as Vendor_ID,
+      carrier_id    as Material_Group,
+      connection_id as Material_ID,
+
+      @Semantics.quantity.unitOfMeasure: 'Unit_Of_Measure'
+      booking_id    as Requested_Quantity,
+      currency_code as Unit_Of_Measure,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      flight_price  as Unit_Estimated_Price,
+      currency_code as Currency,
+
+      /* Associations */
+      _Header,
+      _Vendor,
+      _Material
+}

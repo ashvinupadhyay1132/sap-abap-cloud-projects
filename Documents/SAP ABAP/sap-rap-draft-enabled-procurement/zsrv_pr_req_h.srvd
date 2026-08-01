@@ -1,0 +1,5 @@
+@EndUserText.label: 'Draft-Enabled Purchase Requisition Service Exposure'
+define service ZSRV_PR_REQ_H {
+  expose ZCDS_I_PR_REQ_H as RequisitionHeader;
+  expose ZCDS_I_PR_REQ_I as RequisitionItem;
+}

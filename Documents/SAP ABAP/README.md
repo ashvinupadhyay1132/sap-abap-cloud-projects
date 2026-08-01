@@ -17,6 +17,7 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
+| [`sap-rap-draft-enabled-procurement`](./sap-rap-draft-enabled-procurement) | RAP Stateful Draft Framework | `with draft;`, Draft Tables, `Activate`, `Prepare`, ABAP Unit Tests |
 | [`sap-rap-multi-level-header-items`](./sap-rap-multi-level-header-items) | 3-Level RAP Composition Tree | Header -> Item -> Schedule Line, Deep EML, Cascade Locks, ABAP Unit Tests |
 | [`sap-rap-side-effects-inventory`](./sap-rap-side-effects-inventory) | RAP Side Effects & Feature Control | `@Consumption.sideEffects`, Dynamic Features, Determinations, ABAP Unit Tests |
 | [`sap-rap-custom-numbering-invoice`](./sap-rap-custom-numbering-invoice) | RAP Early Custom Numbering | Managed RAP, `early numbering`, `cl_number_range` API, ABAP Unit Tests |
