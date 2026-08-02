@@ -17,6 +17,7 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
+| [`sap-rap-badi-extensibility-framework`](./sap-rap-badi-extensibility-framework) | Clean Core BAdI Extensibility | BAdI Interfaces (`zif_badi_order_calc`), Clean Core In-App Extensions, ABAP Unit Tests |
 | [`sap-rap-virtual-elements-pricing`](./sap-rap-virtual-elements-pricing) | RAP Virtual Elements & Pricing | `@ObjectModel.virtualElement`, `if_sadl_exit_calc_element_read`, ABAP Unit Tests |
 | [`sap-rap-draft-enabled-procurement`](./sap-rap-draft-enabled-procurement) | RAP Stateful Draft Framework | `with draft;`, Draft Tables, `Activate`, `Prepare`, ABAP Unit Tests |
 | [`sap-rap-multi-level-header-items`](./sap-rap-multi-level-header-items) | 3-Level RAP Composition Tree | Header -> Item -> Schedule Line, Deep EML, Cascade Locks, ABAP Unit Tests |

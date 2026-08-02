@@ -1,0 +1,4 @@
+@EndUserText.label: 'BAdI Extensibility Order Service Exposure'
+define service ZSRV_EXT_ORDER {
+  expose ZCDS_I_EXT_ORDER as ExtensibleOrder;
+}

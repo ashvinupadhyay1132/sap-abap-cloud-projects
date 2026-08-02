@@ -1,0 +1,28 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'BAdI Extensibility Order View Entity'
+
+define root view entity ZCDS_I_EXT_ORDER
+  as select from /dmo/travel as ExtOrder
+
+  association [0..1] to /DMO/I_Customer as _Customer on $projection.Customer_ID = _Customer.CustomerID
+  association [0..1] to I_Currency       as _Currency  on $projection.Currency    = _Currency.Currency
+{
+  key travel_id       as Order_ID,
+      agency_id       as Sales_Org,
+      customer_id     as Customer_ID,
+      begin_date      as Order_Date,
+      description     as Order_Description,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      total_price     as Gross_Amount,
+
+      @Semantics.amount.currencyCode: 'Currency'
+      booking_fee     as Discount_Amount,
+      currency_code   as Currency,
+
+      overall_status  as Order_Status,
+
+      /* Associations */
+      _Customer,
+      _Currency
+}
