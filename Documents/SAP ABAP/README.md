@@ -17,6 +17,7 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
+| [`abapgit-rap-bdef-serializer`](./abapgit-rap-bdef-serializer) | Open-Source abapGit Contribution | `abapGit` Serializer Architecture, RAP BDEF XML Serialization, ABAP Unit Tests |
 | [`sap-amdp-consolidated-gl-ledger`](./sap-amdp-consolidated-gl-ledger) | FI AMDP Financial Closing | AMDP HANA SQLScript, In-Memory Balance Math, ABAP Unit Tests |
 | [`sap-rap-badi-extensibility-framework`](./sap-rap-badi-extensibility-framework) | Clean Core BAdI Extensibility | BAdI Interfaces (`zif_badi_order_calc`), Clean Core In-App Extensions, ABAP Unit Tests |
 | [`sap-rap-virtual-elements-pricing`](./sap-rap-virtual-elements-pricing) | RAP Virtual Elements & Pricing | `@ObjectModel.virtualElement`, `if_sadl_exit_calc_element_read`, ABAP Unit Tests |
