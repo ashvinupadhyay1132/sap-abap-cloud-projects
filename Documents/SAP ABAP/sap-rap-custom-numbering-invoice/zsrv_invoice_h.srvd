@@ -1,5 +1,0 @@
-@EndUserText.label: 'Invoice Header & Item Service Exposure'
-define service ZSRV_INVOICE_H {
-  expose ZCDS_I_INVOICE_H as InvoiceHeader;
-  expose ZCDS_I_INVOICE_I as InvoiceItem;
-}

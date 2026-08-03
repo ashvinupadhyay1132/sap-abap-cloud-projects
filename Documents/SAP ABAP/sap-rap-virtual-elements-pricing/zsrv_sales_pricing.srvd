@@ -1,4 +1,0 @@
-@EndUserText.label: 'SD Sales Pricing Service Exposure'
-define service ZSRV_SALES_PRICING {
-  expose ZCDS_I_SALES_PRICING as SalesOrderPricing;
-}
