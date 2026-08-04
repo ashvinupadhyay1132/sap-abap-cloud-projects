@@ -1,0 +1,33 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Embedded Analytics CDS Analytical Cube Entity'
+@Analytics.dataCategory: #CUBE
+
+define view entity ZCDS_C_CUBE_SALES
+  as select from /dmo/travel as SalesCube
+
+  association [0..1] to /DMO/I_Customer as _Customer on $projection.Customer_ID = _Customer.CustomerID
+  association [0..1] to /DMO/I_Agency   as _Agency   on $projection.Agency_ID   = _Agency.AgencyID
+  association [0..1] to I_Currency       as _Currency on $projection.Currency    = _Currency.Currency
+{
+  @Analytics.dimension: true
+  key agency_id     as Agency_ID,
+
+  @Analytics.dimension: true
+  key customer_id   as Customer_ID,
+
+  @Analytics.dimension: true
+  key currency_code as Currency,
+
+  @DefaultAggregation: #SUM
+  @Semantics.amount.currencyCode: 'Currency'
+  total_price       as Total_Sales_Volume,
+
+  @DefaultAggregation: #AVG
+  @Semantics.amount.currencyCode: 'Currency'
+  booking_fee       as Average_Margin_Fee,
+
+  /* Associations */
+  _Customer,
+  _Agency,
+  _Currency
+}

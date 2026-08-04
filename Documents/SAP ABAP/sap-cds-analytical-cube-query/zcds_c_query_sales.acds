@@ -1,0 +1,19 @@
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Embedded Analytics CDS Analytical Query View Entity'
+@Analytics.query: true
+
+define view entity ZCDS_C_QUERY_SALES
+  as select from ZCDS_C_CUBE_SALES
+{
+  @Analytics.dimension: true
+  key Agency_ID,
+
+  @Analytics.dimension: true
+  key Customer_ID,
+
+  @Analytics.dimension: true
+  key Currency,
+
+  Total_Sales_Volume,
+  Average_Margin_Fee
+}

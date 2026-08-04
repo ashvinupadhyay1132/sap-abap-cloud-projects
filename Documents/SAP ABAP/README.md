@@ -17,21 +17,24 @@ Every project in this repository adheres to two enterprise production standards:
 
 | Project Directory | Focus Area | Key Technologies |
 | :--- | :--- | :--- |
-| [`abapgit-rap-bdef-serializer`](./abapgit-rap-bdef-serializer) | Open-Source abapGit Contribution | `abapGit` Serializer Architecture, RAP BDEF XML Serialization, ABAP Unit Tests |
-| [`sap-amdp-consolidated-gl-ledger`](./sap-amdp-consolidated-gl-ledger) | FI AMDP Financial Closing | AMDP HANA SQLScript, In-Memory Balance Math, ABAP Unit Tests |
-| [`sap-rap-badi-extensibility-framework`](./sap-rap-badi-extensibility-framework) | Clean Core BAdI Extensibility | BAdI Interfaces (`zif_badi_order_calc`), Clean Core In-App Extensions, ABAP Unit Tests |
-| [`sap-rap-virtual-elements-pricing`](./sap-rap-virtual-elements-pricing) | RAP Virtual Elements & Pricing | `@ObjectModel.virtualElement`, `if_sadl_exit_calc_element_read`, ABAP Unit Tests |
-| [`sap-rap-draft-enabled-procurement`](./sap-rap-draft-enabled-procurement) | RAP Stateful Draft Framework | `with draft;`, Draft Tables, `Activate`, `Prepare`, ABAP Unit Tests |
-| [`sap-rap-multi-level-header-items`](./sap-rap-multi-level-header-items) | 3-Level RAP Composition Tree | Header -> Item -> Schedule Line, Deep EML, Cascade Locks, ABAP Unit Tests |
-| [`sap-rap-side-effects-inventory`](./sap-rap-side-effects-inventory) | RAP Side Effects & Feature Control | `@Consumption.sideEffects`, Dynamic Features, Determinations, ABAP Unit Tests |
-| [`sap-rap-custom-numbering-invoice`](./sap-rap-custom-numbering-invoice) | RAP Early Custom Numbering | Managed RAP, `early numbering`, `cl_number_range` API, ABAP Unit Tests |
-| [`sap-rap-unmanaged-sales-order`](./sap-rap-unmanaged-sales-order) | Unmanaged BO & Legacy BAPI | Unmanaged RAP, Custom Transactional Buffer, Saver Sequence, ABAP Unit Tests |
-| [`sap-amdp-financial-analytics`](./sap-amdp-financial-analytics) | Database Code Pushdown | AMDP, HANA SQLScript, Window Functions (`RANK`), ABAP Unit Tests |
-| [`sap-ddic-purchase-requisition-system`](./sap-ddic-purchase-requisition-system) | Data Dictionary & Procurement | CDS View Entities, Currency/Quantity Semantics, Deep Structures, Table Types, ABAP Unit Tests |
 | [`sap-rap-managed-travel-app`](./sap-rap-managed-travel-app) | Business Object Architecture | SAP RAP Framework, Draft Handling, BDEF, EML, Validations, ABAP Unit Tests |
-| [`sap-abap-open-sql-foundation`](./sap-abap-open-sql-foundation) | Open SQL Data Fetching | Inner/Left Joins, `GROUP BY`, `HAVING`, Aggregate Functions, ABAP Unit Tests |
-| [`sap-oo-abap-business-engines`](./sap-oo-abap-business-engines) | Core OO-ABAP Logic | Type Inference (`DATA`, `VALUE`, `COND`), Encapsulation, ABAP Unit Tests |
+| [`sap-rap-unmanaged-sales-order`](./sap-rap-unmanaged-sales-order) | Unmanaged BO & Legacy BAPI | Unmanaged RAP, Custom Transactional Buffer, Saver Sequence, ABAP Unit Tests |
+| [`sap-rap-draft-enabled-procurement`](./sap-rap-draft-enabled-procurement) | RAP Stateful Draft Framework | `with draft;`, Draft Tables, `Activate`, `Prepare`, ABAP Unit Tests |
+| [`sap-rap-side-effects-inventory`](./sap-rap-side-effects-inventory) | RAP Side Effects & Dynamic Control | `@Consumption.sideEffects`, Dynamic Features, Determinations, ABAP Unit Tests |
+| [`sap-rap-multi-level-header-items`](./sap-rap-multi-level-header-items) | 3-Level RAP Composition Tree | Header -> Item -> Schedule Line, Deep EML, Cascade Locks, ABAP Unit Tests |
+| [`sap-rap-custom-numbering-invoice`](./sap-rap-custom-numbering-invoice) | RAP Early Custom Numbering | Managed RAP, `early numbering`, `cl_number_range` API, ABAP Unit Tests |
+| [`sap-rap-virtual-elements-pricing`](./sap-rap-virtual-elements-pricing) | RAP Virtual Elements & Pricing | `@ObjectModel.virtualElement`, `if_sadl_exit_calc_element_read`, ABAP Unit Tests |
+| [`sap-rap-badi-extensibility-framework`](./sap-rap-badi-extensibility-framework) | Clean Core BAdI Extensibility | BAdI Interfaces (`zif_badi_order_calc`), Clean Core In-App Extensions, ABAP Unit Tests |
+| [`sap-amdp-consolidated-gl-ledger`](./sap-amdp-consolidated-gl-ledger) | FI AMDP Financial Closing | AMDP HANA SQLScript, In-Memory Balance Math, ABAP Unit Tests |
+| [`sap-amdp-financial-analytics`](./sap-amdp-financial-analytics) | Database Code Pushdown | AMDP, HANA SQLScript, Window Functions (`RANK`), ABAP Unit Tests |
+| [`sap-amdp-inventory-aging-analytics`](./sap-amdp-inventory-aging-analytics) | Inventory Aging Analytics | AMDP SQLScript, Valuation Buckets, Dead Stock Calculations, ABAP Unit Tests |
+| [`sap-cds-analytical-cube-query`](./sap-cds-analytical-cube-query) | CDS Multidimensional Analytics | `@Analytics.dataCategory: #CUBE`, `#QUERY`, Analytical Annotations, ABAP Unit Tests |
+| [`sap-btp-destination-service-oauth`](./sap-btp-destination-service-oauth) | SAP BTP Destination & OAuth | `CL_HTTP_DESTINATION_PROVIDER`, OAuth 2.0 Token Flow, ABAP Unit Tests |
 | [`sap-btp-http-rest-integration`](./sap-btp-http-rest-integration) | Cloud API Consumption | `cl_web_http_client_manager`, `cl_http_destination_provider`, ABAP Unit Tests |
+| [`sap-ddic-purchase-requisition-system`](./sap-ddic-purchase-requisition-system) | Data Dictionary & Procurement | CDS View Entities, Currency/Quantity Semantics, Deep Structures, Table Types, ABAP Unit Tests |
+| [`sap-oo-abap-business-engines`](./sap-oo-abap-business-engines) | Core OO-ABAP Logic | Type Inference (`DATA`, `VALUE`, `COND`), Encapsulation, ABAP Unit Tests |
+| [`sap-abap-open-sql-foundation`](./sap-abap-open-sql-foundation) | Open SQL Data Fetching | Inner/Left Joins, `GROUP BY`, `HAVING`, Aggregate Functions, ABAP Unit Tests |
+| [`abapgit-rap-bdef-serializer`](./abapgit-rap-bdef-serializer) | Open-Source abapGit Contribution | `abapGit` Serializer Architecture, RAP BDEF XML Serialization, ABAP Unit Tests |
 
 ---
 
